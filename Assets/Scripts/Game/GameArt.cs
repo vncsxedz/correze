@@ -42,6 +42,14 @@ namespace GauntletRun.Game
         public Mesh CapsuleMesh;
         public Mesh QuadMesh;
 
+        [Header("Optional humanoid runner (assign local MINIMO assets in Unity)")]
+        public GameObject RunnerModelPrefab;
+        public AnimationClip RunnerIdle;
+        public AnimationClip RunnerRun;
+        public AnimationClip RunnerJump;
+        public AnimationClip RunnerSlide;
+        public AnimationClip RunnerFall;
+
         [Header("Audio")]
         public AudioClip RunMusic;
         public AudioClip TitleMusic;
