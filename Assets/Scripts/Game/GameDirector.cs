@@ -312,7 +312,7 @@ namespace GauntletRun.Game
                     case RunEventKind.PowerUp:
                         sound.Play(art.PowerUp, 0.9f, 0f);
                         Effects.Burst(at, art.ParticleAdditive, PowerColor(e.Pickup), Color.white, 30, 5f, 0.3f, 0.6f);
-                        hud.ShowBanner(e.Pickup == PickupKind.Shield ? "SHIELD!" : e.Pickup == PickupKind.Magnet ? "MAGNET!" : "DOUBLE POINTS!", 1.2f);
+                        hud.ShowBanner(e.Pickup == PickupKind.Shield ? "ESCUDO!" : e.Pickup == PickupKind.Magnet ? "ÍMÃ!" : "PONTOS EM DOBRO!", 1.2f);
                         break;
                     case RunEventKind.ShieldBreak:
                         sound.Play(art.ShieldBreak, 1f, 0f);
