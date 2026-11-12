@@ -234,7 +234,7 @@ namespace GauntletRun.Game
             Set(shop, screen == Screen.Shop);
             Set(over, screen == Screen.GameOver);
             Profile profile = session.Profile;
-            titleRecords.text = $"Best {profile.Best:N0}   ·   Furthest {profile.BestDistance:N0} m   ·   Purse {profile.Wallet:N0} coins";
+            titleRecords.text = $"Recorde {profile.Best:N0}   ·   Distância {profile.BestDistance:N0} m   ·   Carteira {profile.Wallet:N0} moedas";
             if (screen == Screen.Playing)
             {
                 hintTime = profile.Runs < 3 ? 6f : 0f;
@@ -252,8 +252,8 @@ namespace GauntletRun.Game
                 };
                 overScore.text = result.Score.ToString("N0");
                 Set(overNewBest, result.NewBest);
-                overBest.text = $"Best {profile.Best:N0}";
-                overDetails.text = $"{result.Distance:N0} m   ·   {result.Coins} coins   ·   {result.Gems} gems   ·   +{result.Earned} to the purse ({profile.Wallet:N0})";
+                overBest.text = $"Recorde {profile.Best:N0}";
+                overDetails.text = $"{result.Distance:N0} m   ·   {result.Coins} moedas   ·   {result.Gems} gemas   ·   +{result.Earned} na carteira ({profile.Wallet:N0})";
             }
             RefreshSettings(profile);
             RefreshShop(profile);
