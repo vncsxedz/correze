@@ -333,6 +333,8 @@ namespace GauntletRun.Game
             }
         }
 
+        void OnDestroy() => Knight?.Dispose();
+
         static Color PowerColor(PickupKind kind) =>
             kind == PickupKind.Shield ? new Color(0.35f, 0.65f, 1f) : kind == PickupKind.Magnet ? new Color(1f, 0.35f, 0.3f) : new Color(0.75f, 0.45f, 1f);
     }
