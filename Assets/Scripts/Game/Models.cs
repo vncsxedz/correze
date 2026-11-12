@@ -34,61 +34,51 @@ namespace GauntletRun.Game
             blade = Shapes.Prism(3, 0.55f, 0.35f, 0.08f, seed: 3);
         }
 
-        // ---- Knight ----
+        // ---- Zé ----
 
         public static KnightRig Knight(Transform parent)
         {
-            var rig = new KnightRig { Root = new GameObject("Knight").transform };
+            var rig = new KnightRig { Root = new GameObject("Ze").transform };
             rig.Root.SetParent(parent, false);
             Shapes.Shadow(rig.Root, 0.5f);
             rig.Body = new GameObject("Body").transform;
             rig.Body.SetParent(rig.Root, false);
             Transform body = rig.Body;
-            Material armour = art.Armour, trim = art.Trim, cloth = art.Cloth;
+            Material pants = art.Armour, shoe = art.Trim, shirt = art.Cloth;
 
             rig.LeftLeg = Pivot("Left leg", body, new Vector3(-0.17f, 0.82f, 0f));
             rig.RightLeg = Pivot("Right leg", body, new Vector3(0.17f, 0.82f, 0f));
             foreach (Transform leg in new[] { rig.LeftLeg, rig.RightLeg })
             {
-                Shapes.Part("Thigh", leg, PrimitiveType.Cube, armour, new Vector3(0f, -0.22f, 0f), Vector3.zero, new Vector3(0.22f, 0.44f, 0.24f));
-                Shapes.Part("Boot", leg, PrimitiveType.Cube, trim, new Vector3(0f, -0.66f, 0.04f), Vector3.zero, new Vector3(0.24f, 0.36f, 0.32f));
+                Shapes.Part("Calça", leg, PrimitiveType.Cube, pants, new Vector3(0f, -0.22f, 0f), Vector3.zero, new Vector3(0.19f, 0.44f, 0.22f));
+                Shapes.Part("Kichute", leg, PrimitiveType.Cube, shoe, new Vector3(0f, -0.66f, 0.08f), Vector3.zero, new Vector3(0.27f, 0.16f, 0.38f));
+                Shapes.Part("Sola", leg, PrimitiveType.Cube, art.WoodDark, new Vector3(0f, -0.74f, 0.08f), Vector3.zero, new Vector3(0.28f, 0.045f, 0.39f));
             }
-            Shapes.Part("Belt", body, PrimitiveType.Cube, trim, new Vector3(0f, 0.86f, 0f), Vector3.zero, new Vector3(0.56f, 0.12f, 0.34f));
-            Shapes.Part("Tabard", body, PrimitiveType.Cube, cloth, new Vector3(0f, 1.1f, 0.13f), Vector3.zero, new Vector3(0.46f, 0.5f, 0.1f));
-            Shapes.Part("Chest", body, PrimitiveType.Cube, armour, new Vector3(0f, 1.15f, 0f), Vector3.zero, new Vector3(0.54f, 0.56f, 0.32f));
-            Shapes.Part("Gorget", body, PrimitiveType.Cylinder, trim, new Vector3(0f, 1.45f, 0f), Vector3.zero, new Vector3(0.3f, 0.05f, 0.3f));
-            Shapes.Part("Helmet", body, PrimitiveType.Cube, armour, new Vector3(0f, 1.65f, 0f), Vector3.zero, new Vector3(0.36f, 0.36f, 0.38f));
-            Shapes.Part("Visor", body, PrimitiveType.Cube, art.Visor, new Vector3(0f, 1.66f, 0.19f), Vector3.zero, new Vector3(0.28f, 0.06f, 0.02f));
-            Shapes.Part("Crest", body, PrimitiveType.Cube, trim, new Vector3(0f, 1.86f, 0f), Vector3.zero, new Vector3(0.06f, 0.08f, 0.4f));
-            Shapes.Part("Plume", body, PrimitiveType.Sphere, cloth, new Vector3(0f, 1.95f, -0.12f), new Vector3(20f, 0f, 0f), new Vector3(0.12f, 0.16f, 0.42f));
-            Shapes.Part("Pauldron L", body, PrimitiveType.Sphere, armour, new Vector3(-0.34f, 1.38f, 0f), Vector3.zero, new Vector3(0.26f, 0.2f, 0.3f));
-            Shapes.Part("Pauldron R", body, PrimitiveType.Sphere, armour, new Vector3(0.34f, 1.38f, 0f), Vector3.zero, new Vector3(0.26f, 0.2f, 0.3f));
+            Shapes.Part("Camiseta", body, PrimitiveType.Capsule, shirt, new Vector3(0f, 1.16f, 0f), Vector3.zero, new Vector3(0.52f, 0.34f, 0.34f));
+            Shapes.Part("Gola", body, PrimitiveType.Cylinder, shoe, new Vector3(0f, 1.44f, 0f), Vector3.zero, new Vector3(0.16f, 0.035f, 0.16f));
+            Shapes.Part("Cabeça", body, PrimitiveType.Sphere, art.Gold, new Vector3(0f, 1.65f, 0.02f), Vector3.zero, new Vector3(0.34f, 0.38f, 0.34f));
+            Shapes.Part("Cabelo", body, PrimitiveType.Sphere, art.WoodDark, new Vector3(0f, 1.79f, -0.04f), new Vector3(0f, 0f, 0f), new Vector3(0.36f, 0.19f, 0.36f));
+            Shapes.Part("Olhos", body, PrimitiveType.Cube, art.Visor, new Vector3(0f, 1.68f, 0.185f), Vector3.zero, new Vector3(0.19f, 0.035f, 0.02f));
+            Shapes.Part("Nariz", body, PrimitiveType.Sphere, art.Gold, new Vector3(0f, 1.61f, 0.2f), Vector3.zero, new Vector3(0.07f, 0.07f, 0.06f));
 
-            rig.LeftArm = Pivot("Left arm", body, new Vector3(-0.36f, 1.34f, 0f));
-            rig.RightArm = Pivot("Right arm", body, new Vector3(0.36f, 1.34f, 0f));
+            rig.LeftArm = Pivot("Left arm", body, new Vector3(-0.32f, 1.32f, 0f));
+            rig.RightArm = Pivot("Right arm", body, new Vector3(0.32f, 1.32f, 0f));
             foreach (Transform arm in new[] { rig.LeftArm, rig.RightArm })
             {
-                Shapes.Part("Arm", arm, PrimitiveType.Cube, armour, new Vector3(0f, -0.26f, 0f), Vector3.zero, new Vector3(0.16f, 0.5f, 0.18f));
-                Shapes.Part("Gauntlet", arm, PrimitiveType.Cube, trim, new Vector3(0f, -0.54f, 0.02f), Vector3.zero, new Vector3(0.18f, 0.14f, 0.2f));
+                Shapes.Part("Braço", arm, PrimitiveType.Capsule, shirt, new Vector3(0f, -0.25f, 0f), Vector3.zero, new Vector3(0.14f, 0.25f, 0.14f));
+                Shapes.Part("Mão", arm, PrimitiveType.Sphere, art.Gold, new Vector3(0f, -0.51f, 0.02f), Vector3.zero, new Vector3(0.13f, 0.13f, 0.13f));
             }
-            // A sword on the right hand and a kite shield on the left arm.
-            Shapes.Part("Grip", rig.RightArm, PrimitiveType.Cube, art.WoodDark, new Vector3(0f, -0.56f, 0.1f), Vector3.zero, new Vector3(0.05f, 0.05f, 0.18f));
-            Shapes.Part("Guard", rig.RightArm, PrimitiveType.Cube, trim, new Vector3(0f, -0.56f, 0.2f), Vector3.zero, new Vector3(0.26f, 0.05f, 0.05f));
-            Shapes.Part("Blade", rig.RightArm, PrimitiveType.Cube, art.Steel, new Vector3(0f, -0.56f, 0.6f), Vector3.zero, new Vector3(0.07f, 0.02f, 0.78f));
-            Shapes.Part("Shield", rig.LeftArm, PrimitiveType.Cube, cloth, new Vector3(-0.12f, -0.3f, 0.05f), new Vector3(0f, 90f, 0f), new Vector3(0.46f, 0.56f, 0.06f));
-            Shapes.Part("Shield rim", rig.LeftArm, PrimitiveType.Cube, trim, new Vector3(-0.155f, -0.3f, 0.05f), new Vector3(0f, 90f, 0f), new Vector3(0.12f, 0.6f, 0.02f));
-
-            rig.Cape = Pivot("Cape", body, new Vector3(0f, 1.42f, -0.17f));
-            Shapes.Part("Cloth", rig.Cape, PrimitiveType.Cube, cloth, new Vector3(0f, -0.5f, -0.02f), Vector3.zero, new Vector3(0.56f, 1f, 0.04f));
+            rig.Cape = Pivot("Mochila", body, new Vector3(0f, 1.22f, -0.2f));
+            Shapes.Part("Mochila", rig.Cape, PrimitiveType.Cube, shoe, new Vector3(0f, -0.12f, -0.06f), Vector3.zero, new Vector3(0.34f, 0.42f, 0.16f));
 
             var armourParts = new System.Collections.Generic.List<Renderer>();
             var trimParts = new System.Collections.Generic.List<Renderer>();
             var clothParts = new System.Collections.Generic.List<Renderer>();
             foreach (Renderer renderer in rig.Root.GetComponentsInChildren<Renderer>())
             {
-                if (renderer.sharedMaterial == armour) armourParts.Add(renderer);
-                else if (renderer.sharedMaterial == trim) trimParts.Add(renderer);
-                else if (renderer.sharedMaterial == cloth) clothParts.Add(renderer);
+                if (renderer.sharedMaterial == pants) armourParts.Add(renderer);
+                else if (renderer.sharedMaterial == shoe) trimParts.Add(renderer);
+                else if (renderer.sharedMaterial == shirt) clothParts.Add(renderer);
             }
             rig.Armour = armourParts.ToArray();
             rig.Trim = trimParts.ToArray();
@@ -96,7 +86,7 @@ namespace GauntletRun.Game
             return rig;
         }
 
-        /// <summary>Paints the knight in a skin's colours (one material per colour, shared by its parts).</summary>
+        /// <summary>Applies a skin's clothing colours (one material per colour, shared by its parts).</summary>
         public static void Paint(KnightRig rig, Skin skin)
         {
             Apply(rig.Armour, Shapes.Recolored(art.Armour, Shapes.Hex(skin.Armour)));
