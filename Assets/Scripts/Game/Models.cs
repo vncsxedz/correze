@@ -139,7 +139,7 @@ namespace GauntletRun.Game
             foreach (float side in new[] { -1f, 1f })
             {
                 Shapes.Part("Orelha da gatinha", rig.Cape, PrimitiveType.Sphere, kittyWhite,
-                    new Vector3(side * 0.105f, 0.075f, -0.18f), new Vector3(0f, 0f, side * -28f),
+                    new Vector3(side * 0.105f, 0.075f, -0.205f), new Vector3(0f, 0f, side * -28f),
                     new Vector3(0.085f, 0.12f, 0.035f), shadows: false);
                 Shapes.Part("Olho da gatinha", rig.Cape, PrimitiveType.Sphere, kittyInk,
                     new Vector3(side * 0.055f, -0.035f, -0.219f), Vector3.zero,
