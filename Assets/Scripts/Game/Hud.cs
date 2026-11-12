@@ -110,7 +110,7 @@ namespace GauntletRun.Game
             VisualElement left = Box("corner corner--left", play);
             score = Text("0", "score", left);
             distance = Text("0 m", "distance", left);
-            multiplier = Text("x2 POINTS", "multiplier hidden", left);
+            multiplier = Text("x2 PONTOS", "multiplier hidden", left);
 
             VisualElement right = Box("corner corner--right", play);
             VisualElement purse = Box("row", right);
@@ -119,7 +119,7 @@ namespace GauntletRun.Game
             Box("dot dot--gem", purse);
             gems = Text("0", "count", purse);
             Click("II", "button--square", purse, () => PauseClicked?.Invoke());
-            string[] names = { "SHIELD", "MAGNET", "x2" };
+            string[] names = { "ESCUDO", "ÍMÃ", "x2" };
             string[] kinds = { "shield", "magnet", "double" };
             for (int i = 0; i < 3; i++)
             {
@@ -131,42 +131,42 @@ namespace GauntletRun.Game
             }
 
             banner = Text("", "banner hidden", play);
-            hint = Text("A / D or arrows: change lanes   ·   W, Up or Space: jump   ·   S, Down or Ctrl: slide   ·   swipe on touch", "hint hidden", play);
+            hint = Text("Deslize para os lados: trocar de faixa  ·  para cima: pular  ·  para baixo: deslizar", "hint hidden", play);
         }
 
         void BuildTitle()
         {
             title = Layer("menu menu--title");
             VisualElement card = Box("title-card", title, true);
-            Text("GAUNTLET RUN", "logo", card);
-            Text("Dash a knight down the castle gauntlet: dodge, jump and slide past traps, grab the gold.", "tagline", card);
-            Click("Run", "button--big", card, () => PlayClicked?.Invoke());
+            Text("CORRE, ZÉ!", "logo", card);
+            Text("Zé disparou pela cidade! Desvie dos obstáculos, pule, deslize e pegue as moedas.", "tagline", card);
+            Click("Correr", "button--big", card, () => PlayClicked?.Invoke());
             VisualElement row = Box("row row--center", card);
-            Click("Shop", "button--wide-half", row, () => ShopClicked?.Invoke());
-            Click("Settings", "button--wide-half", row, () => SettingsClicked?.Invoke());
+            Click("Visuais", "button--wide-half", row, () => ShopClicked?.Invoke());
+            Click("Configurações", "button--wide-half", row, () => SettingsClicked?.Invoke());
             titleRecords = Text("", "records", card);
-            Text("Enter: run   ·   Tab: shop   ·   Esc: pause in a run", "note", card);
+            Text("Enter: correr  ·  Tab: visuais  ·  Esc: pausar", "note", card);
         }
 
         void BuildPause()
         {
             pause = Layer("menu menu--dim");
             VisualElement card = Box("panel panel--center", pause, true);
-            Text("Paused", "panel__title", card);
-            Click("Resume", "button--wide button--primary", card, () => ResumeClicked?.Invoke());
-            Click("Settings", "button--wide", card, () => SettingsClicked?.Invoke());
-            Click("Restart", "button--wide", card, () => RestartClicked?.Invoke());
-            Click("Quit to title", "button--wide button--danger", card, () => MenuClicked?.Invoke());
+            Text("Pausado", "panel__title", card);
+            Click("Continuar", "button--wide button--primary", card, () => ResumeClicked?.Invoke());
+            Click("Configurações", "button--wide", card, () => SettingsClicked?.Invoke());
+            Click("Recomeçar", "button--wide", card, () => RestartClicked?.Invoke());
+            Click("Voltar ao início", "button--wide button--danger", card, () => MenuClicked?.Invoke());
         }
 
         void BuildSettings()
         {
             settings = Layer("menu menu--dim");
             VisualElement card = Box("panel panel--center", settings, true);
-            Text("Settings", "panel__title", card);
-            Volume(card, "Music", step => MusicStep?.Invoke(step), out musicBar, out musicValue);
-            Volume(card, "Effects", step => EffectsStep?.Invoke(step), out effectsBar, out effectsValue);
-            Click("Back", "button--wide button--primary", card, () => BackClicked?.Invoke());
+            Text("Configurações", "panel__title", card);
+            Volume(card, "Música", step => MusicStep?.Invoke(step), out musicBar, out musicValue);
+            Volume(card, "Efeitos", step => EffectsStep?.Invoke(step), out effectsBar, out effectsValue);
+            Click("Voltar", "button--wide button--primary", card, () => BackClicked?.Invoke());
         }
 
         static void Volume(VisualElement parent, string name, Action<int> step, out VisualElement bar, out Label value)
@@ -184,7 +184,7 @@ namespace GauntletRun.Game
         {
             shop = Layer("menu menu--shop");
             VisualElement card = Box("panel panel--shop", shop, true);
-            Text("Armoury", "panel__title", card);
+            Text("Loja de visuais", "panel__title", card);
             shopWallet = Text("", "wallet", card);
             VisualElement grid = Box("grid", card);
             for (int i = 0; i < Skins.All.Count; i++)
@@ -202,24 +202,24 @@ namespace GauntletRun.Game
                 skinStates[i] = Text("", "skin__state", button);
                 skinCards[i] = button;
             }
-            Click("Back", "button--wide button--primary", card, () => BackClicked?.Invoke());
+            Click("Voltar", "button--wide button--primary", card, () => BackClicked?.Invoke());
         }
 
         void BuildOver()
         {
             over = Layer("menu menu--dim");
             VisualElement card = Box("panel panel--center panel--over", over, true);
-            Text("Run over", "panel__title", card);
+            Text("Fim de corrida", "panel__title", card);
             overCause = Text("", "note", card);
             overScore = Text("", "result-score", card);
-            overNewBest = Text("NEW BEST!", "new-best", card);
+            overNewBest = Text("NOVO RECORDE!", "new-best", card);
             overBest = Text("", "records", card);
             overDetails = Text("", "details", card);
-            Click("Run again", "button--wide button--primary", card, () => RestartClicked?.Invoke());
+            Click("Correr de novo", "button--wide button--primary", card, () => RestartClicked?.Invoke());
             VisualElement row = Box("row row--center", card);
-            Click("Shop", "button--wide-half", row, () => ShopClicked?.Invoke());
-            Click("Title", "button--wide-half", row, () => MenuClicked?.Invoke());
-            Text("Enter: run again   ·   Tab: shop   ·   Esc: title", "note", card);
+            Click("Visuais", "button--wide-half", row, () => ShopClicked?.Invoke());
+            Click("Início", "button--wide-half", row, () => MenuClicked?.Invoke());
+            Text("Enter: correr de novo  ·  Tab: visuais  ·  Esc: início", "note", card);
         }
 
         // ---- Updating ----
@@ -234,7 +234,7 @@ namespace GauntletRun.Game
             Set(shop, screen == Screen.Shop);
             Set(over, screen == Screen.GameOver);
             Profile profile = session.Profile;
-            titleRecords.text = $"Best {profile.Best:N0}   ·   Furthest {profile.BestDistance:N0} m   ·   Purse {profile.Wallet:N0} coins";
+            titleRecords.text = $"Recorde {profile.Best:N0}   ·   Distância {profile.BestDistance:N0} m   ·   Carteira {profile.Wallet:N0} moedas";
             if (screen == Screen.Playing)
             {
                 hintTime = profile.Runs < 3 ? 6f : 0f;
@@ -244,16 +244,16 @@ namespace GauntletRun.Game
                 RunResult result = session.LastResult;
                 overCause.text = result.KilledBy switch
                 {
-                    ObstacleKind.Hurdle => "Tripped over a barricade",
-                    ObstacleKind.Beam => "Ran into a spiked beam",
-                    ObstacleKind.Wall => "Crashed into the crates",
-                    ObstacleKind.Axe => "Caught by a swinging axe",
+                    ObstacleKind.Hurdle => "Zé tropeçou na barreira",
+                    ObstacleKind.Beam => "Zé bateu na placa baixa",
+                    ObstacleKind.Wall => "Zé bateu no bloqueio",
+                    ObstacleKind.Axe => "Zé foi atingido pelo obstáculo",
                     _ => "",
                 };
                 overScore.text = result.Score.ToString("N0");
                 Set(overNewBest, result.NewBest);
-                overBest.text = $"Best {profile.Best:N0}";
-                overDetails.text = $"{result.Distance:N0} m   ·   {result.Coins} coins   ·   {result.Gems} gems   ·   +{result.Earned} to the purse ({profile.Wallet:N0})";
+                overBest.text = $"Recorde {profile.Best:N0}";
+                overDetails.text = $"{result.Distance:N0} m   ·   {result.Coins} moedas   ·   {result.Gems} gemas   ·   +{result.Earned} na carteira ({profile.Wallet:N0})";
             }
             RefreshSettings(profile);
             RefreshShop(profile);
@@ -269,12 +269,12 @@ namespace GauntletRun.Game
 
         public void RefreshShop(Profile profile)
         {
-            shopWallet.text = $"Purse: {profile.Wallet:N0} coins";
+            shopWallet.text = $"Carteira: {profile.Wallet:N0} moedas";
             for (int i = 0; i < Skins.All.Count; i++)
             {
                 bool owned = profile.Owns(i);
                 bool worn = profile.Skin == i;
-                skinStates[i].text = worn ? "Wearing" : owned ? "Owned: wear" : $"{Skins.All[i].Price:N0} coins";
+                skinStates[i].text = worn ? "Em uso" : owned ? "Adquirido: usar" : $"{Skins.All[i].Price:N0} moedas";
                 skinCards[i].EnableInClassList("skin--worn", worn);
                 skinCards[i].EnableInClassList("skin--locked", !owned && profile.Wallet < Skins.All[i].Price);
             }
