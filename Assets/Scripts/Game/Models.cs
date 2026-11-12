@@ -50,51 +50,128 @@ namespace GauntletRun.Game
 
         public static KnightRig Knight(Transform parent)
         {
+            // Keep the runner's original pivots and overall silhouette so the existing
+            // run, jump, slide and crash poses continue to line up with gameplay.
             var rig = new KnightRig { Root = new GameObject("Ze").transform };
             rig.Root.SetParent(parent, false);
             Shapes.Shadow(rig.Root, 0.5f);
             rig.Body = new GameObject("Body").transform;
             rig.Body.SetParent(rig.Root, false);
             Transform body = rig.Body;
-            Material pants = art.Armour, shoe = art.Trim, shirt = art.Cloth;
 
+            Material pants = art.Armour;
+            Material shoes = art.Trim;
+            Material shirt = art.Cloth;
+            Material skin = art.Wood;
+            Material hair = art.WoodDark;
+            Material detail = art.Steel;
+
+            // Tapered casual trousers and classic black canvas Kichutes.
             rig.LeftLeg = Pivot("Left leg", body, new Vector3(-0.17f, 0.82f, 0f));
             rig.RightLeg = Pivot("Right leg", body, new Vector3(0.17f, 0.82f, 0f));
             foreach (Transform leg in new[] { rig.LeftLeg, rig.RightLeg })
             {
-                Shapes.Part("Calça", leg, PrimitiveType.Cube, pants, new Vector3(0f, -0.22f, 0f), Vector3.zero, new Vector3(0.19f, 0.44f, 0.22f));
-                Shapes.Part("Kichute", leg, PrimitiveType.Cube, shoe, new Vector3(0f, -0.66f, 0.08f), Vector3.zero, new Vector3(0.27f, 0.16f, 0.38f));
-                Shapes.Part("Sola", leg, PrimitiveType.Cube, art.WoodDark, new Vector3(0f, -0.74f, 0.08f), Vector3.zero, new Vector3(0.28f, 0.045f, 0.39f));
-            }
-            Shapes.Part("Camiseta", body, PrimitiveType.Capsule, shirt, new Vector3(0f, 1.16f, 0f), Vector3.zero, new Vector3(0.52f, 0.34f, 0.34f));
-            Shapes.Part("Gola", body, PrimitiveType.Cylinder, shoe, new Vector3(0f, 1.44f, 0f), Vector3.zero, new Vector3(0.16f, 0.035f, 0.16f));
-            Shapes.Part("Cabeça", body, PrimitiveType.Sphere, art.Wood, new Vector3(0f, 1.65f, 0.02f), Vector3.zero, new Vector3(0.34f, 0.38f, 0.34f));
-            Shapes.Part("Cabelo", body, PrimitiveType.Sphere, art.WoodDark, new Vector3(0f, 1.79f, -0.04f), new Vector3(0f, 0f, 0f), new Vector3(0.36f, 0.19f, 0.36f));
-            Shapes.Part("Olhos", body, PrimitiveType.Cube, art.Visor, new Vector3(0f, 1.68f, 0.185f), Vector3.zero, new Vector3(0.19f, 0.035f, 0.02f));
-            Shapes.Part("Nariz", body, PrimitiveType.Sphere, art.Wood, new Vector3(0f, 1.61f, 0.2f), Vector3.zero, new Vector3(0.07f, 0.07f, 0.06f));
+                Shapes.Part("Calça superior", leg, PrimitiveType.Capsule, pants,
+                    new Vector3(0f, -0.18f, 0f), Vector3.zero, new Vector3(0.2f, 0.3f, 0.2f));
+                Shapes.Part("Calça inferior", leg, PrimitiveType.Capsule, pants,
+                    new Vector3(0f, -0.43f, 0.02f), Vector3.zero, new Vector3(0.15f, 0.27f, 0.17f));
+                Shapes.Part("Barra da calça", leg, PrimitiveType.Cube, pants,
+                    new Vector3(0f, -0.56f, 0.02f), Vector3.zero, new Vector3(0.17f, 0.07f, 0.18f));
 
-            rig.LeftArm = Pivot("Left arm", body, new Vector3(-0.32f, 1.32f, 0f));
-            rig.RightArm = Pivot("Right arm", body, new Vector3(0.32f, 1.32f, 0f));
+                Shapes.Part("Kichute", leg, PrimitiveType.Cube, shoes,
+                    new Vector3(0f, -0.67f, 0.1f), Vector3.zero, new Vector3(0.28f, 0.15f, 0.38f));
+                Shapes.Part("Solado de borracha", leg, PrimitiveType.Cube, detail,
+                    new Vector3(0f, -0.75f, 0.1f), Vector3.zero, new Vector3(0.29f, 0.05f, 0.39f));
+                // Three visible lace bars make the shoe read as a Kichute at game scale.
+                for (int lace = 0; lace < 3; lace++)
+                {
+                    Shapes.Part("Cadarço", leg, PrimitiveType.Cube, detail,
+                        new Vector3(0f, -0.585f, 0.04f + lace * 0.055f), Vector3.zero, new Vector3(0.13f, 0.018f, 0.025f), shadows: false);
+                }
+                float outer = leg == rig.LeftLeg ? -1f : 1f;
+                for (int stripe = 0; stripe < 3; stripe++)
+                {
+                    Shapes.Part("Faixa lateral", leg, PrimitiveType.Cube, detail,
+                        new Vector3(outer * 0.137f, -0.64f, 0.025f + stripe * 0.055f),
+                        Vector3.zero, new Vector3(0.014f, 0.065f, 0.035f), shadows: false);
+                }
+            }
+
+            // Jeans waistband, soft T-shirt, collar and a small Z badge.
+            Shapes.Part("Cintura da calça", body, PrimitiveType.Cube, pants,
+                new Vector3(0f, 0.84f, 0f), Vector3.zero, new Vector3(0.39f, 0.16f, 0.25f));
+            Shapes.Part("Camiseta", body, PrimitiveType.Capsule, shirt,
+                new Vector3(0f, 1.14f, 0f), Vector3.zero, new Vector3(0.29f, 0.33f, 0.22f));
+            Shapes.Part("Gola", body, PrimitiveType.Cylinder, shoes,
+                new Vector3(0f, 1.435f, 0f), Vector3.zero, new Vector3(0.17f, 0.035f, 0.17f));
+            Shapes.Part("Z do peito", body, PrimitiveType.Cube, shoes,
+                new Vector3(0f, 1.28f, 0.218f), Vector3.zero, new Vector3(0.16f, 0.025f, 0.022f), shadows: false);
+            Shapes.Part("Z do peito", body, PrimitiveType.Cube, shoes,
+                new Vector3(0f, 1.18f, 0.222f), new Vector3(0f, 0f, -35f), new Vector3(0.18f, 0.025f, 0.022f), shadows: false);
+            Shapes.Part("Z do peito", body, PrimitiveType.Cube, shoes,
+                new Vector3(0f, 1.08f, 0.218f), Vector3.zero, new Vector3(0.16f, 0.025f, 0.022f), shadows: false);
+
+            // A compact backpack replaces the cape and stays on its original animation pivot.
+            rig.Cape = Pivot("Mochila", body, new Vector3(0f, 1.18f, -0.22f));
+            Shapes.Part("Mochila", rig.Cape, PrimitiveType.Cube, shirt,
+                new Vector3(0f, -0.07f, -0.07f), Vector3.zero, new Vector3(0.38f, 0.45f, 0.2f));
+            Shapes.Part("Bolso da mochila", rig.Cape, PrimitiveType.Cube, shoes,
+                new Vector3(0f, -0.19f, 0.045f), Vector3.zero, new Vector3(0.25f, 0.17f, 0.025f));
+            Shapes.Part("Alça esquerda", body, PrimitiveType.Cube, shoes,
+                new Vector3(-0.205f, 1.22f, 0.16f), new Vector3(0f, 0f, -12f), new Vector3(0.045f, 0.36f, 0.025f));
+            Shapes.Part("Alça direita", body, PrimitiveType.Cube, shoes,
+                new Vector3(0.205f, 1.22f, 0.16f), new Vector3(0f, 0f, 12f), new Vector3(0.045f, 0.36f, 0.025f));
+
+            // Friendly face, swept hair and ears; details face down the original forward axis (+Z).
+            Shapes.Part("Cabeça", body, PrimitiveType.Sphere, skin,
+                new Vector3(0f, 1.64f, 0.02f), Vector3.zero, new Vector3(0.32f, 0.35f, 0.31f));
+            Shapes.Part("Cabelo", body, PrimitiveType.Sphere, hair,
+                new Vector3(0f, 1.81f, -0.015f), Vector3.zero, new Vector3(0.335f, 0.18f, 0.33f));
+            Shapes.Part("Franja", body, PrimitiveType.Sphere, hair,
+                new Vector3(0.025f, 1.82f, 0.22f), new Vector3(0f, 0f, -12f), new Vector3(0.22f, 0.105f, 0.13f));
+            foreach (float side in new[] { -1f, 1f })
+            {
+                Shapes.Part("Orelha", body, PrimitiveType.Sphere, skin,
+                    new Vector3(side * 0.305f, 1.64f, 0.025f), Vector3.zero, new Vector3(0.09f, 0.12f, 0.075f));
+                Shapes.Part("Costeleta", body, PrimitiveType.Cube, hair,
+                    new Vector3(side * 0.265f, 1.68f, 0.06f), Vector3.zero, new Vector3(0.075f, 0.18f, 0.16f));
+                Shapes.Part("Sobrancelha", body, PrimitiveType.Cube, hair,
+                    new Vector3(side * 0.085f, 1.735f, 0.305f), new Vector3(0f, 0f, side * 7f), new Vector3(0.085f, 0.025f, 0.02f));
+                Shapes.Part("Olho", body, PrimitiveType.Sphere, detail,
+                    new Vector3(side * 0.085f, 1.665f, 0.302f), Vector3.zero, new Vector3(0.052f, 0.064f, 0.028f), shadows: false);
+                Shapes.Part("Pupila", body, PrimitiveType.Sphere, art.Visor,
+                    new Vector3(side * 0.078f, 1.665f, 0.325f), Vector3.zero, new Vector3(0.024f, 0.034f, 0.015f), shadows: false);
+            }
+            Shapes.Part("Nariz", body, PrimitiveType.Sphere, skin,
+                new Vector3(0f, 1.595f, 0.326f), Vector3.zero, new Vector3(0.07f, 0.085f, 0.065f));
+            Shapes.Part("Sorriso", body, PrimitiveType.Cube, hair,
+                new Vector3(0f, 1.525f, 0.305f), Vector3.zero, new Vector3(0.105f, 0.018f, 0.018f), shadows: false);
+
+            // The view still animates these exact shoulder pivots and expects a backpack pivot in rig.Cape.
+            rig.LeftArm = Pivot("Left arm", body, new Vector3(-0.34f, 1.3f, 0f));
+            rig.RightArm = Pivot("Right arm", body, new Vector3(0.34f, 1.3f, 0f));
             foreach (Transform arm in new[] { rig.LeftArm, rig.RightArm })
             {
-                Shapes.Part("Braço", arm, PrimitiveType.Capsule, shirt, new Vector3(0f, -0.25f, 0f), Vector3.zero, new Vector3(0.14f, 0.25f, 0.14f));
-                Shapes.Part("Mão", arm, PrimitiveType.Sphere, art.Wood, new Vector3(0f, -0.51f, 0.02f), Vector3.zero, new Vector3(0.13f, 0.13f, 0.13f));
+                Shapes.Part("Manga", arm, PrimitiveType.Capsule, shirt,
+                    new Vector3(0f, -0.08f, 0f), Vector3.zero, new Vector3(0.15f, 0.18f, 0.15f));
+                Shapes.Part("Antebraço", arm, PrimitiveType.Capsule, skin,
+                    new Vector3(0f, -0.32f, 0f), Vector3.zero, new Vector3(0.11f, 0.24f, 0.11f));
+                Shapes.Part("Mão", arm, PrimitiveType.Sphere, skin,
+                    new Vector3(0f, -0.51f, 0.025f), Vector3.zero, new Vector3(0.13f, 0.14f, 0.13f));
             }
-            rig.Cape = Pivot("Mochila", body, new Vector3(0f, 1.22f, -0.2f));
-            Shapes.Part("Mochila", rig.Cape, PrimitiveType.Cube, shoe, new Vector3(0f, -0.12f, -0.06f), Vector3.zero, new Vector3(0.34f, 0.42f, 0.16f));
 
-            var armourParts = new System.Collections.Generic.List<Renderer>();
-            var trimParts = new System.Collections.Generic.List<Renderer>();
-            var clothParts = new System.Collections.Generic.List<Renderer>();
+            var pantsParts = new System.Collections.Generic.List<Renderer>();
+            var shoeParts = new System.Collections.Generic.List<Renderer>();
+            var shirtParts = new System.Collections.Generic.List<Renderer>();
             foreach (Renderer renderer in rig.Root.GetComponentsInChildren<Renderer>())
             {
-                if (renderer.sharedMaterial == pants) armourParts.Add(renderer);
-                else if (renderer.sharedMaterial == shoe) trimParts.Add(renderer);
-                else if (renderer.sharedMaterial == shirt) clothParts.Add(renderer);
+                if (renderer.sharedMaterial == pants) pantsParts.Add(renderer);
+                else if (renderer.sharedMaterial == shoes) shoeParts.Add(renderer);
+                else if (renderer.sharedMaterial == shirt) shirtParts.Add(renderer);
             }
-            rig.Armour = armourParts.ToArray();
-            rig.Trim = trimParts.ToArray();
-            rig.Cloth = clothParts.ToArray();
+            rig.Armour = pantsParts.ToArray();
+            rig.Trim = shoeParts.ToArray();
+            rig.Cloth = shirtParts.ToArray();
             return rig;
         }
 
