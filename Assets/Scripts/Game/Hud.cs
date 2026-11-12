@@ -154,7 +154,7 @@ namespace GauntletRun.Game
             VisualElement card = Box("panel panel--center", pause, true);
             Text("Pausado", "panel__title", card);
             Click("Continuar", "button--wide button--primary", card, () => ResumeClicked?.Invoke());
-            Click("Settings", "button--wide", card, () => SettingsClicked?.Invoke());
+            Click("Configurações", "button--wide", card, () => SettingsClicked?.Invoke());
             Click("Recomeçar", "button--wide", card, () => RestartClicked?.Invoke());
             Click("Voltar ao início", "button--wide button--danger", card, () => MenuClicked?.Invoke());
         }
@@ -163,7 +163,7 @@ namespace GauntletRun.Game
         {
             settings = Layer("menu menu--dim");
             VisualElement card = Box("panel panel--center", settings, true);
-            Text("Settings", "panel__title", card);
+            Text("Configurações", "panel__title", card);
             Volume(card, "Música", step => MusicStep?.Invoke(step), out musicBar, out musicValue);
             Volume(card, "Efeitos", step => EffectsStep?.Invoke(step), out effectsBar, out effectsValue);
             Click("Voltar", "button--wide button--primary", card, () => BackClicked?.Invoke());
@@ -202,7 +202,7 @@ namespace GauntletRun.Game
                 skinStates[i] = Text("", "skin__state", button);
                 skinCards[i] = button;
             }
-            Click("Back", "button--wide button--primary", card, () => BackClicked?.Invoke());
+            Click("Voltar", "button--wide button--primary", card, () => BackClicked?.Invoke());
         }
 
         void BuildOver()
@@ -217,7 +217,7 @@ namespace GauntletRun.Game
             overDetails = Text("", "details", card);
             Click("Correr de novo", "button--wide button--primary", card, () => RestartClicked?.Invoke());
             VisualElement row = Box("row row--center", card);
-            Click("Shop", "button--wide-half", row, () => ShopClicked?.Invoke());
+            Click("Visuais", "button--wide-half", row, () => ShopClicked?.Invoke());
             Click("Início", "button--wide-half", row, () => MenuClicked?.Invoke());
             Text("Enter: correr de novo  ·  Tab: visuais  ·  Esc: início", "note", card);
         }
@@ -269,7 +269,7 @@ namespace GauntletRun.Game
 
         public void RefreshShop(Profile profile)
         {
-            shopWallet.text = $"Purse: {profile.Wallet:N0} coins";
+            shopWallet.text = $"Carteira: {profile.Wallet:N0} moedas";
             for (int i = 0; i < Skins.All.Count; i++)
             {
                 bool owned = profile.Owns(i);
