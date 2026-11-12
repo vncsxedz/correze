@@ -28,7 +28,7 @@ namespace GauntletRun.Core
     {
         public static readonly IReadOnlyList<Skin> All = new[]
         {
-            new Skin("Zé de rua", 0, "#536b82", "#8291a0", "#ded8ca"),
+            new Skin("Zé de rua", 0, "#536b82", "#8291a0", "#f0eee7"),
             new Skin("Domingueira", 150, "#76634f", "#d3ba8b", "#d9d0bd"),
             new Skin("Chuva de verão", 300, "#3d7185", "#7caeb5", "#c7dce0"),
             new Skin("Uniforme da firma", 500, "#344f70", "#d0b65b", "#e5e0d2"),
