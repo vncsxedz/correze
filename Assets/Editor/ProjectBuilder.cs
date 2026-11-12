@@ -70,20 +70,20 @@ namespace GauntletRun.EditorTools
                 AssetDatabase.CreateAsset(art, ArtPath);
             }
 
-            art.Floor = Lit("Floor", "#8a8178", 0.12f);
-            art.FloorDark = Lit("FloorDark", "#5f5852", 0.1f);
-            art.Trim = Lit("Trim", "#c9a24a", 0.6f, metallic: 0.7f);
-            art.Wall = Lit("Wall", "#6d6470", 0.08f);
-            art.WallDark = Lit("WallDark", "#4a4350", 0.08f);
-            art.Banner = Lit("Banner", "#8e1f2b", 0.15f);
-            art.TorchFlame = Glowing("TorchFlame", "#ffcf6b", "#ff8a1e", 3f);
-            art.Wood = Lit("Wood", "#8a5a33", 0.12f);
-            art.WoodDark = Lit("WoodDark", "#5a3a22", 0.1f);
-            art.Iron = Lit("Iron", "#3a3d45", 0.5f, metallic: 0.7f);
+            art.Floor = Lit("Floor", "#454a50", 0.12f);
+            art.FloorDark = Lit("FloorDark", "#30343a", 0.1f);
+            art.Trim = Lit("Trim", "#f3c844", 0.6f, metallic: 0.7f);
+            art.Wall = Lit("Wall", "#586875", 0.08f);
+            art.WallDark = Lit("WallDark", "#37434c", 0.08f);
+            art.Banner = Lit("Banner", "#268b57", 0.15f);
+            art.TorchFlame = Glowing("TorchFlame", "#f3c844", "#e68124", 1.5f);
+            art.Wood = Lit("Wood", "#d9a441", 0.12f);
+            art.WoodDark = Lit("WoodDark", "#4b3e34", 0.1f);
+            art.Iron = Lit("Iron", "#30363b", 0.5f, metallic: 0.7f);
             art.Steel = Lit("Steel", "#d6dde6", 0.85f, metallic: 0.9f);
 
-            art.Armour = Lit("Armour", "#aeb6c2", 0.7f, metallic: 0.75f);
-            art.Cloth = Lit("Cloth", "#2f5fa8", 0.2f);
+            art.Armour = Lit("Armour", "#273c32", 0.7f, metallic: 0.75f);
+            art.Cloth = Lit("Cloth", "#268b57", 0.2f);
             art.Visor = Unlit("Visor", "#0b0a10");
 
             art.Gold = Glowing("Gold", "#f2c14e", "#b98318", 0.9f, smoothness: 0.8f, metallic: 0.7f);
@@ -325,7 +325,7 @@ namespace GauntletRun.EditorTools
         static void ConfigurePlayer(Texture2D icon)
         {
             PlayerSettings.companyName = "Trysac";
-            PlayerSettings.productName = "Gauntlet Run";
+            PlayerSettings.productName = "Corre, Zé!";
             PlayerSettings.SetIcons(NamedBuildTarget.Unknown, new[] { icon }, IconKind.Any);
             int[] sizes = PlayerSettings.GetIconSizes(NamedBuildTarget.Standalone, IconKind.Any);
             var standaloneIcons = new Texture2D[sizes.Length];
