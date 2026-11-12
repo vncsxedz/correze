@@ -55,7 +55,7 @@ namespace GauntletRun.Game
             sound.Init();
             worldRoot = new GameObject("Gauntlet").transform;
             World = new WorldView(worldRoot);
-            Knight = new KnightView(worldRoot, Models.Glow(new Color(0.35f, 0.65f, 1f, 0.28f)));
+            Knight = new KnightView(worldRoot, Models.Glow(new Color(0.35f, 0.65f, 1f, 0.28f)), art);
             hud.Init();
             hud.PlayClicked += () => { Click(); Play(); };
             hud.ShopClicked += () => { Click(); OpenShop(); };
