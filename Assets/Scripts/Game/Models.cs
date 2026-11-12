@@ -113,10 +113,24 @@ namespace GauntletRun.Game
 
             // A compact backpack replaces the cape and stays on its original animation pivot.
             rig.Cape = Pivot("Mochila", body, new Vector3(0f, 1.18f, -0.22f));
-            Shapes.Part("Mochila", rig.Cape, PrimitiveType.Cube, shirt,
-                new Vector3(0f, -0.07f, -0.07f), Vector3.zero, new Vector3(0.38f, 0.45f, 0.2f));
-            Shapes.Part("Bolso da mochila", rig.Cape, PrimitiveType.Cube, shoes,
-                new Vector3(0f, -0.19f, 0.045f), Vector3.zero, new Vector3(0.25f, 0.17f, 0.025f));
+            Shapes.Part("Mochila", rig.Cape, PrimitiveType.Cube, art.WoodDark,
+                new Vector3(0f, -0.07f, -0.07f), Vector3.zero, new Vector3(0.42f, 0.48f, 0.22f));
+            Shapes.Part("Alça traseira esquerda", rig.Cape, PrimitiveType.Cube, shoes,
+                new Vector3(-0.16f, -0.07f, -0.186f), Vector3.zero, new Vector3(0.04f, 0.39f, 0.025f), shadows: false);
+            Shapes.Part("Alça traseira direita", rig.Cape, PrimitiveType.Cube, shoes,
+                new Vector3(0.16f, -0.07f, -0.186f), Vector3.zero, new Vector3(0.04f, 0.39f, 0.025f), shadows: false);
+            Shapes.Part("Tampa da mochila", rig.Cape, PrimitiveType.Cube, shoes,
+                new Vector3(0f, 0.105f, -0.19f), Vector3.zero, new Vector3(0.3f, 0.13f, 0.026f));
+            Shapes.Part("Emblema Z", rig.Cape, PrimitiveType.Cube, art.Iron,
+                new Vector3(0f, -0.005f, -0.2f), Vector3.zero, new Vector3(0.16f, 0.024f, 0.018f), shadows: false);
+            Shapes.Part("Emblema Z", rig.Cape, PrimitiveType.Cube, art.Iron,
+                new Vector3(0f, -0.07f, -0.202f), new Vector3(0f, 0f, -35f), new Vector3(0.18f, 0.024f, 0.018f), shadows: false);
+            Shapes.Part("Emblema Z", rig.Cape, PrimitiveType.Cube, art.Iron,
+                new Vector3(0f, -0.135f, -0.2f), Vector3.zero, new Vector3(0.16f, 0.024f, 0.018f), shadows: false);
+            Shapes.Part("Bolso lateral esquerdo", rig.Cape, PrimitiveType.Cube, art.WoodDark,
+                new Vector3(-0.205f, -0.16f, -0.05f), Vector3.zero, new Vector3(0.06f, 0.17f, 0.15f));
+            Shapes.Part("Bolso lateral direito", rig.Cape, PrimitiveType.Cube, art.WoodDark,
+                new Vector3(0.205f, -0.16f, -0.05f), Vector3.zero, new Vector3(0.06f, 0.17f, 0.15f));
             Shapes.Part("Alça esquerda", body, PrimitiveType.Cube, shoes,
                 new Vector3(-0.205f, 1.22f, 0.16f), new Vector3(0f, 0f, -12f), new Vector3(0.045f, 0.36f, 0.025f));
             Shapes.Part("Alça direita", body, PrimitiveType.Cube, shoes,
