@@ -219,6 +219,40 @@ namespace GauntletRun.Game
             return rig;
         }
 
+        /// <summary>Applies a skin's clothing colours (one material per colour, shared by its parts).</summary>
+        public static void Paint(KnightRig rig, Skin skin)
+        {
+            Apply(rig.Armour, Shapes.Recolored(art.Armour, Shapes.Hex(skin.Armour)));
+            Apply(rig.Trim, Shapes.Recolored(art.Trim, Shapes.Hex(skin.Trim)));
+            Apply(rig.Cloth, Shapes.Recolored(art.Cloth, Shapes.Hex(skin.Cape)));
+        }
+
+        static void Apply(Renderer[] renderers, Material material)
+        {
+            foreach (Renderer renderer in renderers) renderer.sharedMaterial = material;
+        }
+
+        static readonly System.Collections.Generic.Dictionary<Color, Material> glows = new System.Collections.Generic.Dictionary<Color, Material>();
+
+        /// <summary>A shared additive glow material per colour.</summary>
+        public static Material Glow(Color color)
+        {
+            if (!glows.TryGetValue(color, out Material material) || material == null)
+            {
+                material = Shapes.Tinted(color);
+                glows[color] = material;
+            }
+            return material;
+        }
+
+        static Transform Pivot(string name, Transform parent, Vector3 position)
+        {
+            var pivot = new GameObject(name).transform;
+            pivot.SetParent(parent, false);
+            pivot.localPosition = position;
+            return pivot;
+        }
+
         // ---- Obstacles ----
 
         /// <summary>An obstacle standing on the floor at the origin of its lane. Axes return their swinging pendulum.</summary>
