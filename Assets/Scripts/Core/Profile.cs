@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GauntletRun.Core
 {
-    /// <summary>A look for Zé in the shop: shirt, trainers and outfit colours (hex) and its price.</summary>
+    /// <summary>A look for Zé in the shop: shorts, accent and shirt colours (hex) and its price.</summary>
     public sealed class Skin
     {
         public Skin(string name, int price, string armour, string trim, string cape)
@@ -28,12 +28,12 @@ namespace GauntletRun.Core
     {
         public static readonly IReadOnlyList<Skin> All = new[]
         {
-            new Skin("Zé de chinelo", 0, "#268b57", "#f3d647", "#26392f"),
-            new Skin("Kichute clássico", 150, "#f3f0e5", "#202020", "#244a32"),
-            new Skin("Uniforme da firma", 300, "#3c5f9b", "#e6e6e6", "#252f48"),
-            new Skin("Chuva de verão", 500, "#f5f3ea", "#e44736", "#3185b8"),
-            new Skin("Domingueira", 800, "#f0c22f", "#e34a32", "#22734a"),
-            new Skin("Noite na cidade", 1200, "#343b48", "#f3c844", "#22252c"),
+            new Skin("Zé de rua", 0, "#536b82", "#8291a0", "#ded8ca"),
+            new Skin("Domingueira", 150, "#76634f", "#d3ba8b", "#d9d0bd"),
+            new Skin("Chuva de verão", 300, "#3d7185", "#7caeb5", "#c7dce0"),
+            new Skin("Uniforme da firma", 500, "#344f70", "#d0b65b", "#e5e0d2"),
+            new Skin("Baile do bairro", 800, "#593d63", "#bd7f9a", "#ead3dc"),
+            new Skin("Noite na cidade", 1200, "#303740", "#d6ad59", "#c8c2b8"),
         };
     }
 
