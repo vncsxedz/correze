@@ -33,13 +33,13 @@ namespace GauntletRun.Game
 
             graph = PlayableGraph.Create("Corre, Zé! Runner");
             graph.SetTimeUpdateMode(DirectorUpdateMode.UnscaledGameTime);
-            mixer = AnimationMixerPlayable.Create(graph, 2, true);
+            mixer = AnimationMixerPlayable.Create(graph, 2);
             AnimationPlayableOutput output = AnimationPlayableOutput.Create(graph, "Runner", animator);
             output.SetSourcePlayable(mixer);
             graph.Play();
         }
 
-        public void Play(AnimationClip clip, bool loop)
+        public void Play(AnimationClip clip)
         {
             if (clip == null || !graph.IsValid() || activeClip == clip)
             {
@@ -56,8 +56,7 @@ namespace GauntletRun.Game
             AnimationClipPlayable playable = AnimationClipPlayable.Create(graph, clip);
             playable.SetApplyFootIK(true);
             playable.SetApplyPlayableIK(true);
-            playable.SetOverrideLoopTime(true);
-            playable.SetLoopTime(loop);
+            // Looping is controlled by the imported clip's Loop Time setting.
             clips[port] = playable;
             graph.Connect(playable, 0, mixer, port);
             mixer.SetInputWeight(port, hasCurrent ? 0f : 1f);
