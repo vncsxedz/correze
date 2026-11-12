@@ -240,56 +240,50 @@ namespace GauntletRun.Game
         /// <summary>Twelve metres of castle corridor: flagstones, gold lane lines, walls, pillars, torches and banners.</summary>
         public static Transform Segment(Transform parent, int index)
         {
-            var root = new GameObject("Segment " + index).transform;
+            var root = new GameObject("Rua " + index).transform;
             root.SetParent(parent, false);
             var random = new System.Random(index * 7919 + 17);
             float half = SegmentLength / 2f;
-            Shapes.Part("Slab", root, PrimitiveType.Cube, art.FloorDark, new Vector3(0f, -0.3f, half), Vector3.zero, new Vector3(WallX * 2f, 0.6f, SegmentLength));
+            // Keep the original segment, lane and side boundaries so camera and gameplay stay aligned.
+            Shapes.Part("Asfalto", root, PrimitiveType.Cube, art.FloorDark, new Vector3(0f, -0.3f, half), Vector3.zero, new Vector3(WallX * 2f, 0.6f, SegmentLength));
             for (int lane = 0; lane < Tuning.LaneCount; lane++)
             {
                 for (int row = 0; row < 4; row++)
                 {
-                    Material stone = random.Next(3) == 0 ? art.FloorDark : art.Floor;
-                    float lift = (float)random.NextDouble() * 0.02f;
-                    Shapes.Part("Flag", root, PrimitiveType.Cube, stone, new Vector3(Tuning.LaneX(lane), -0.04f + lift, row * 3f + 1.5f),
-                        new Vector3(0f, (float)(random.NextDouble() * 2 - 1), 0f), new Vector3(Tuning.LaneWidth - 0.16f, 0.1f, 2.86f));
+                    Material asphalt = random.Next(3) == 0 ? art.FloorDark : art.Floor;
+                    Shapes.Part("Remendo", root, PrimitiveType.Cube, asphalt, new Vector3(Tuning.LaneX(lane), -0.04f, row * 3f + 1.5f),
+                        Vector3.zero, new Vector3(Tuning.LaneWidth - 0.16f, 0.1f, 2.86f));
                 }
             }
             foreach (float x in new[] { -Tuning.LaneWidth / 2f, Tuning.LaneWidth / 2f })
             {
-                Shapes.Part("Lane line", root, PrimitiveType.Cube, art.Trim, new Vector3(x, 0.01f, half), Vector3.zero, new Vector3(0.07f, 0.04f, SegmentLength), shadows: false);
+                Shapes.Part("Faixa amarela", root, PrimitiveType.Cube, art.Trim, new Vector3(x, 0.01f, half), Vector3.zero, new Vector3(0.07f, 0.04f, SegmentLength), shadows: false);
             }
             foreach (float side in new[] { -1f, 1f })
             {
                 float x = side * WallX;
-                Shapes.Part("Wall", root, PrimitiveType.Cube, art.Wall, new Vector3(x + side * 0.4f, 2.5f, half), Vector3.zero, new Vector3(0.8f, 5f, SegmentLength));
-                Shapes.Part("Kerb", root, PrimitiveType.Cube, art.WallDark, new Vector3(x - side * 0.15f, 0.15f, half), Vector3.zero, new Vector3(0.5f, 0.3f, SegmentLength));
+                Shapes.Part("Calçada", root, PrimitiveType.Cube, art.WallDark, new Vector3(x - side * 0.15f, 0.15f, half), Vector3.zero, new Vector3(0.5f, 0.3f, SegmentLength));
                 for (int p = 0; p < 2; p++)
                 {
                     float z = p * 6f;
-                    Shapes.Part("Pillar", root, PrimitiveType.Cube, art.WallDark, new Vector3(x - side * 0.1f, 2.7f, z), Vector3.zero, new Vector3(0.9f, 5.4f, 0.9f));
-                    Shapes.Part("Capital", root, PrimitiveType.Cube, art.Wall, new Vector3(x - side * 0.15f, 5.3f, z), Vector3.zero, new Vector3(1.1f, 0.3f, 1.1f));
+                    float height = 4.3f + (index + p) % 3 * 0.55f;
+                    Material facade = (index + p) % 2 == 0 ? art.Wall : art.Banner;
+                    Shapes.Part("Predio", root, PrimitiveType.Cube, facade, new Vector3(x + side * 1.2f, height * 0.5f, z + 2.8f), Vector3.zero, new Vector3(1.8f, height, 5.4f));
+                    for (int window = 0; window < 2; window++)
+                    {
+                        Shapes.Part("Janela", root, PrimitiveType.Cube, art.WallDark,
+                            new Vector3(x + side * 0.25f, 2.1f + window * 1.25f, z + 1.5f), Vector3.zero, new Vector3(0.035f, 0.55f, 0.7f), shadows: false);
+                    }
+                    if ((index + p + (side > 0 ? 1 : 0)) % 2 == 0)
+                    {
+                        Shapes.Part("Poste", root, PrimitiveType.Cylinder, art.Iron, new Vector3(x - side * 0.3f, 2.2f, z + 3f), Vector3.zero, new Vector3(0.08f, 2.2f, 0.08f));
+                        Shapes.Part("Luminaria", root, PrimitiveType.Cube, art.TorchFlame, new Vector3(x - side * 0.3f, 4.35f, z + 3f), Vector3.zero, new Vector3(0.5f, 0.12f, 0.18f), shadows: false);
+                    }
+                    else
+                    {
+                        Shapes.Part("Placa", root, PrimitiveType.Cube, art.Trim, new Vector3(x - side * 0.24f, 3.1f, z + 3f), Vector3.zero, new Vector3(0.06f, 0.55f, 1.05f));
+                    }
                 }
-                if ((index + (side > 0 ? 1 : 0)) % 2 == 0)
-                {
-                    // A torch on the wall between the pillars.
-                    Transform torch = Shapes.Part("Torch", root, PrimitiveType.Cylinder, art.WoodDark, new Vector3(x - side * 0.15f, 2.4f, 3f), new Vector3(0f, 0f, side * 25f), new Vector3(0.1f, 0.3f, 0.1f));
-                    Shapes.Part("Flame", root, PrimitiveType.Sphere, art.TorchFlame, new Vector3(x - side * 0.3f, 2.8f, 3f), Vector3.zero, new Vector3(0.22f, 0.32f, 0.22f), shadows: false);
-                    Shapes.Part("Glow", root, PrimitiveType.Quad, Glow(new Color(1f, 0.55f, 0.2f, 0.35f)), new Vector3(x - side * 0.35f, 2.8f, 3f), new Vector3(0f, side * 90f, 0f), Vector3.one * 1.6f, shadows: false);
-                    torch.name = "Torch";
-                }
-                else
-                {
-                    // A hanging banner.
-                    Shapes.Part("Banner", root, PrimitiveType.Cube, art.Banner, new Vector3(x - side * 0.05f, 3.2f, 3f), Vector3.zero, new Vector3(0.04f, 2f, 1.1f));
-                    Shapes.Part("Banner pole", root, PrimitiveType.Cube, art.Trim, new Vector3(x - side * 0.08f, 4.25f, 3f), Vector3.zero, new Vector3(0.08f, 0.08f, 1.3f));
-                    Shapes.Part("Emblem", root, PrimitiveType.Cube, art.Trim, new Vector3(x - side * 0.03f, 3.4f, 3f), new Vector3(45f, 0f, 0f), new Vector3(0.05f, 0.4f, 0.4f));
-                }
-            }
-            // Arches over the corridor every other segment.
-            if (index % 2 == 0)
-            {
-                Shapes.Part("Arch", root, PrimitiveType.Cube, art.WallDark, new Vector3(0f, 5.7f, 0f), Vector3.zero, new Vector3(WallX * 2f + 1.6f, 0.6f, 0.9f));
             }
             return root;
         }
