@@ -24,23 +24,30 @@ namespace GauntletRun.Game
                 Vector3.zero, new Vector3(1.6f, 2.2f, 1.6f), shadows: false);
             bubble.gameObject.SetActive(false);
 
-            if (art.RunnerModelPrefab != null)
+            // Keep the known-good generated character unless the imported model is fully configured.
+            if (art.RunnerModelPrefab == null || art.RunnerRun == null ||
+                art.RunnerJump == null || art.RunnerSlide == null || art.RunnerFall == null)
             {
-                foreach (Renderer renderer in rig.Body.GetComponentsInChildren<Renderer>(true))
-                    renderer.enabled = false;
-
-                Transform model = Object.Instantiate(art.RunnerModelPrefab, rig.Root, false).transform;
-                model.name = "Visual do Zé";
-                FitRunnerModel(model);
-                runnerRenderers = model.GetComponentsInChildren<Renderer>(true);
-                Animator animator = model.GetComponentInChildren<Animator>(true);
-                if (animator != null && (art.RunnerIdle != null || art.RunnerRun != null ||
-                                         art.RunnerJump != null || art.RunnerSlide != null || art.RunnerFall != null))
-                {
-                    animator.runtimeAnimatorController = null;
-                    runnerClips = new RunnerClipPlayer(animator);
-                }
+                return;
             }
+
+            GameObject instance = Object.Instantiate(art.RunnerModelPrefab, rig.Root, false);
+            Animator animator = instance.GetComponentInChildren<Animator>(true);
+            if (animator == null)
+            {
+                Object.Destroy(instance);
+                return;
+            }
+
+            foreach (Renderer renderer in rig.Body.GetComponentsInChildren<Renderer>(true))
+                renderer.enabled = false;
+
+            Transform model = instance.transform;
+            model.name = "Visual do Zé";
+            FitRunnerModel(model);
+            runnerRenderers = model.GetComponentsInChildren<Renderer>(true);
+            animator.runtimeAnimatorController = null;
+            runnerClips = new RunnerClipPlayer(animator);
         }
 
         public Transform Root => rig.Root;
@@ -81,7 +88,7 @@ namespace GauntletRun.Game
                 AnimationClip clip = !run.Alive ? art.RunnerFall :
                     r.Sliding ? art.RunnerSlide :
                     !r.Grounded ? art.RunnerJump : art.RunnerRun;
-                runnerClips.Play(clip, run.Alive);
+                runnerClips.Play(clip);
                 runnerClips.Tick(dt);
                 return;
             }
@@ -132,7 +139,7 @@ namespace GauntletRun.Game
             bubble.gameObject.SetActive(false);
             if (runnerClips != null)
             {
-                runnerClips.Play(art.RunnerIdle != null ? art.RunnerIdle : art.RunnerRun, true);
+                runnerClips.Play(art.RunnerIdle != null ? art.RunnerIdle : art.RunnerRun);
                 runnerClips.Tick(Time.unscaledDeltaTime);
                 return;
             }
