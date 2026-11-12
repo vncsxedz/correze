@@ -29,6 +29,18 @@ namespace GauntletRun.Game
         public static void Init(GameArt gameArt)
         {
             art = gameArt;
+            // Retint the generated materials at runtime so the existing GameArt asset adopts the city palette too.
+            art.Floor.color = Shapes.Hex("#454a50");
+            art.FloorDark.color = Shapes.Hex("#30343a");
+            art.Trim.color = Shapes.Hex("#f3c844");
+            art.Wall.color = Shapes.Hex("#586875");
+            art.WallDark.color = Shapes.Hex("#37434c");
+            art.Banner.color = Shapes.Hex("#268b57");
+            art.Wood.color = Shapes.Hex("#d9a441");
+            art.WoodDark.color = Shapes.Hex("#4b3e34");
+            art.Iron.color = Shapes.Hex("#30363b");
+            art.Armour.color = Shapes.Hex("#273c32");
+            art.Cloth.color = Shapes.Hex("#268b57");
             spike = Shapes.Prism(4, 0.09f, 0f, 0.28f, seed: 1);
             gem = Shapes.Blob(2, 4, 0f, 2);
             blade = Shapes.Prism(3, 0.55f, 0.35f, 0.08f, seed: 3);
