@@ -56,17 +56,17 @@ namespace GauntletRun.Game
             }
             Shapes.Part("Camiseta", body, PrimitiveType.Capsule, shirt, new Vector3(0f, 1.16f, 0f), Vector3.zero, new Vector3(0.52f, 0.34f, 0.34f));
             Shapes.Part("Gola", body, PrimitiveType.Cylinder, shoe, new Vector3(0f, 1.44f, 0f), Vector3.zero, new Vector3(0.16f, 0.035f, 0.16f));
-            Shapes.Part("Cabeça", body, PrimitiveType.Sphere, art.Gold, new Vector3(0f, 1.65f, 0.02f), Vector3.zero, new Vector3(0.34f, 0.38f, 0.34f));
+            Shapes.Part("Cabeça", body, PrimitiveType.Sphere, art.Wood, new Vector3(0f, 1.65f, 0.02f), Vector3.zero, new Vector3(0.34f, 0.38f, 0.34f));
             Shapes.Part("Cabelo", body, PrimitiveType.Sphere, art.WoodDark, new Vector3(0f, 1.79f, -0.04f), new Vector3(0f, 0f, 0f), new Vector3(0.36f, 0.19f, 0.36f));
             Shapes.Part("Olhos", body, PrimitiveType.Cube, art.Visor, new Vector3(0f, 1.68f, 0.185f), Vector3.zero, new Vector3(0.19f, 0.035f, 0.02f));
-            Shapes.Part("Nariz", body, PrimitiveType.Sphere, art.Gold, new Vector3(0f, 1.61f, 0.2f), Vector3.zero, new Vector3(0.07f, 0.07f, 0.06f));
+            Shapes.Part("Nariz", body, PrimitiveType.Sphere, art.Wood, new Vector3(0f, 1.61f, 0.2f), Vector3.zero, new Vector3(0.07f, 0.07f, 0.06f));
 
             rig.LeftArm = Pivot("Left arm", body, new Vector3(-0.32f, 1.32f, 0f));
             rig.RightArm = Pivot("Right arm", body, new Vector3(0.32f, 1.32f, 0f));
             foreach (Transform arm in new[] { rig.LeftArm, rig.RightArm })
             {
                 Shapes.Part("Braço", arm, PrimitiveType.Capsule, shirt, new Vector3(0f, -0.25f, 0f), Vector3.zero, new Vector3(0.14f, 0.25f, 0.14f));
-                Shapes.Part("Mão", arm, PrimitiveType.Sphere, art.Gold, new Vector3(0f, -0.51f, 0.02f), Vector3.zero, new Vector3(0.13f, 0.13f, 0.13f));
+                Shapes.Part("Mão", arm, PrimitiveType.Sphere, art.Wood, new Vector3(0f, -0.51f, 0.02f), Vector3.zero, new Vector3(0.13f, 0.13f, 0.13f));
             }
             rig.Cape = Pivot("Mochila", body, new Vector3(0f, 1.22f, -0.2f));
             Shapes.Part("Mochila", rig.Cape, PrimitiveType.Cube, shoe, new Vector3(0f, -0.12f, -0.06f), Vector3.zero, new Vector3(0.34f, 0.42f, 0.16f));
