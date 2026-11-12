@@ -25,6 +25,13 @@ namespace GauntletRun.Game
         static Mesh spike;
         static Mesh gem;
         static Mesh blade;
+        static Material skinTone;
+        static Material shirtDirt;
+        static Material denimWear;
+        static Material kittyPink;
+        static Material kittyWhite;
+        static Material kittyInk;
+        static Material kittyNose;
 
         public static void Init(GameArt gameArt)
         {
@@ -40,7 +47,14 @@ namespace GauntletRun.Game
             art.WoodDark.color = Shapes.Hex("#4b3e34");
             art.Iron.color = Shapes.Hex("#30363b");
             art.Armour.color = Shapes.Hex("#273c32");
-            art.Cloth.color = Shapes.Hex("#268b57");
+            art.Cloth.color = Shapes.Hex("#ded8ca");
+            skinTone = Shapes.Recolored(art.Wood, Shapes.Hex("#b77b52"));
+            shirtDirt = Shapes.Recolored(art.Cloth, Shapes.Hex("#a99e87"));
+            denimWear = Shapes.Recolored(art.Armour, Shapes.Hex("#8190a0"));
+            kittyPink = Shapes.Recolored(art.Trim, Shapes.Hex("#f28bb7"));
+            kittyWhite = Shapes.Recolored(art.Cloth, Shapes.Hex("#fff8eb"));
+            kittyInk = Shapes.Recolored(art.Iron, Shapes.Hex("#29242a"));
+            kittyNose = Shapes.Recolored(art.Trim, Shapes.Hex("#ed738f"));
             spike = Shapes.Prism(4, 0.09f, 0f, 0.28f, seed: 1);
             gem = Shapes.Blob(2, 4, 0f, 2);
             blade = Shapes.Prism(3, 0.55f, 0.35f, 0.08f, seed: 3);
@@ -50,8 +64,8 @@ namespace GauntletRun.Game
 
         public static KnightRig Knight(Transform parent)
         {
-            // Keep the runner's original pivots and overall silhouette so the existing
-            // run, jump, slide and crash poses continue to line up with gameplay.
+            // Preserve the runner's pivots and body proportions so all existing poses
+            // continue to align with the gameplay lane and collision math.
             var rig = new KnightRig { Root = new GameObject("Ze").transform };
             rig.Root.SetParent(parent, false);
             Shapes.Shadow(rig.Root, 0.5f);
@@ -59,96 +73,112 @@ namespace GauntletRun.Game
             rig.Body.SetParent(rig.Root, false);
             Transform body = rig.Body;
 
-            Material pants = art.Armour;
-            Material shoes = art.Trim;
+            Material shorts = art.Armour;
+            Material accent = art.Trim;
             Material shirt = art.Cloth;
-            Material skin = art.Wood;
+            Material skin = skinTone ?? Shapes.Recolored(art.Wood, Shapes.Hex("#b77b52"));
             Material hair = art.WoodDark;
             Material detail = art.Steel;
+            Material stains = shirtDirt ?? Shapes.Recolored(art.Cloth, Shapes.Hex("#a99e87"));
+            Material wornDenim = denimWear ?? Shapes.Recolored(art.Armour, Shapes.Hex("#8190a0"));
 
-            // Tapered casual trousers and classic black canvas Kichutes.
+            // Worn denim shorts, visible bare calves and bare feet. Leg pivots are unchanged.
             rig.LeftLeg = Pivot("Left leg", body, new Vector3(-0.17f, 0.82f, 0f));
             rig.RightLeg = Pivot("Right leg", body, new Vector3(0.17f, 0.82f, 0f));
             foreach (Transform leg in new[] { rig.LeftLeg, rig.RightLeg })
             {
-                Shapes.Part("Calça superior", leg, PrimitiveType.Capsule, pants,
-                    new Vector3(0f, -0.18f, 0f), Vector3.zero, new Vector3(0.2f, 0.3f, 0.2f));
-                Shapes.Part("Calça inferior", leg, PrimitiveType.Capsule, pants,
-                    new Vector3(0f, -0.43f, 0.02f), Vector3.zero, new Vector3(0.15f, 0.27f, 0.17f));
-                Shapes.Part("Barra da calça", leg, PrimitiveType.Cube, pants,
-                    new Vector3(0f, -0.56f, 0.02f), Vector3.zero, new Vector3(0.17f, 0.07f, 0.18f));
-
-                Shapes.Part("Kichute", leg, PrimitiveType.Cube, shoes,
-                    new Vector3(0f, -0.67f, 0.1f), Vector3.zero, new Vector3(0.28f, 0.15f, 0.38f));
-                Shapes.Part("Solado de borracha", leg, PrimitiveType.Cube, detail,
-                    new Vector3(0f, -0.75f, 0.1f), Vector3.zero, new Vector3(0.29f, 0.05f, 0.39f));
-                // Three visible lace bars make the shoe read as a Kichute at game scale.
-                for (int lace = 0; lace < 3; lace++)
+                Shapes.Part("Bermuda", leg, PrimitiveType.Capsule, shorts,
+                    new Vector3(0f, -0.22f, 0f), Vector3.zero, new Vector3(0.19f, 0.29f, 0.2f));
+                Shapes.Part("Barra gasta", leg, PrimitiveType.Cube, wornDenim,
+                    new Vector3(0f, -0.37f, 0.015f), new Vector3(0f, 0f, 2f), new Vector3(0.18f, 0.035f, 0.19f), shadows: false);
+                Shapes.Part("Perna", leg, PrimitiveType.Capsule, skin,
+                    new Vector3(0f, -0.51f, 0.015f), Vector3.zero, new Vector3(0.13f, 0.23f, 0.14f));
+                // Foot length points forward (+Z); flattened toes give a readable barefoot silhouette.
+                Shapes.Part("Pé descalço", leg, PrimitiveType.Sphere, skin,
+                    new Vector3(0f, -0.69f, 0.075f), new Vector3(-5f, 0f, 0f), new Vector3(0.19f, 0.085f, 0.29f));
+                for (int toe = 0; toe < 3; toe++)
                 {
-                    Shapes.Part("Cadarço", leg, PrimitiveType.Cube, detail,
-                        new Vector3(0f, -0.585f, 0.04f + lace * 0.055f), Vector3.zero, new Vector3(0.13f, 0.018f, 0.025f), shadows: false);
-                }
-                float outer = leg == rig.LeftLeg ? -1f : 1f;
-                for (int stripe = 0; stripe < 3; stripe++)
-                {
-                    Shapes.Part("Faixa lateral", leg, PrimitiveType.Cube, detail,
-                        new Vector3(outer * 0.137f, -0.64f, 0.025f + stripe * 0.055f),
-                        Vector3.zero, new Vector3(0.014f, 0.065f, 0.035f), shadows: false);
+                    float x = (toe - 1) * 0.052f;
+                    Shapes.Part("Dedo", leg, PrimitiveType.Sphere, skin,
+                        new Vector3(x, -0.69f, 0.185f - Mathf.Abs(toe - 1) * 0.018f), Vector3.zero,
+                        new Vector3(0.052f, 0.045f, 0.085f), shadows: false);
                 }
             }
 
-            // Jeans waistband, soft T-shirt, collar and a small Z badge.
-            Shapes.Part("Cintura da calça", body, PrimitiveType.Cube, pants,
-                new Vector3(0f, 0.84f, 0f), Vector3.zero, new Vector3(0.39f, 0.16f, 0.25f));
+            // Denim waistband and soft, slightly oversized dirty-white T-shirt.
+            Shapes.Part("Cintura da bermuda", body, PrimitiveType.Capsule, shorts,
+                new Vector3(0f, 0.84f, 0f), Vector3.zero, new Vector3(0.37f, 0.13f, 0.24f));
             Shapes.Part("Camiseta", body, PrimitiveType.Capsule, shirt,
-                new Vector3(0f, 1.14f, 0f), Vector3.zero, new Vector3(0.29f, 0.33f, 0.22f));
-            Shapes.Part("Gola", body, PrimitiveType.Cylinder, shoes,
-                new Vector3(0f, 1.435f, 0f), Vector3.zero, new Vector3(0.17f, 0.035f, 0.17f));
-            Shapes.Part("Z do peito", body, PrimitiveType.Cube, shoes,
-                new Vector3(0f, 1.28f, 0.218f), Vector3.zero, new Vector3(0.16f, 0.025f, 0.022f), shadows: false);
-            Shapes.Part("Z do peito", body, PrimitiveType.Cube, shoes,
-                new Vector3(0f, 1.18f, 0.222f), new Vector3(0f, 0f, -35f), new Vector3(0.18f, 0.025f, 0.022f), shadows: false);
-            Shapes.Part("Z do peito", body, PrimitiveType.Cube, shoes,
-                new Vector3(0f, 1.08f, 0.218f), Vector3.zero, new Vector3(0.16f, 0.025f, 0.022f), shadows: false);
+                new Vector3(0f, 1.14f, 0f), Vector3.zero, new Vector3(0.31f, 0.34f, 0.235f));
+            Shapes.Part("Gola", body, PrimitiveType.Cylinder, shirt,
+                new Vector3(0f, 1.435f, 0f), Vector3.zero, new Vector3(0.13f, 0.025f, 0.13f));
+            // Subtle grime and small torn cloth notches, kept decorative and collider-free.
+            Shapes.Part("Mancha da camiseta", body, PrimitiveType.Sphere, stains,
+                new Vector3(-0.17f, 1.04f, 0.19f), new Vector3(0f, 0f, -18f), new Vector3(0.09f, 0.05f, 0.012f), shadows: false);
+            Shapes.Part("Mancha da camiseta", body, PrimitiveType.Sphere, stains,
+                new Vector3(0.13f, 1.21f, 0.207f), new Vector3(0f, 0f, 22f), new Vector3(0.055f, 0.035f, 0.01f), shadows: false);
+            Shapes.Part("Rasgo da camiseta", body, PrimitiveType.Cube, stains,
+                new Vector3(0.205f, 0.93f, 0.115f), new Vector3(0f, 0f, 28f), new Vector3(0.018f, 0.085f, 0.02f), shadows: false);
+            Shapes.Part("Rasgo da camiseta", body, PrimitiveType.Cube, stains,
+                new Vector3(-0.12f, 0.85f, 0.13f), new Vector3(0f, 0f, -35f), new Vector3(0.02f, 0.07f, 0.02f), shadows: false);
+            // Denim wear marks and a simple pocket/seam add cloth detail without changing the silhouette.
+            Shapes.Part("Costura da bermuda", body, PrimitiveType.Cube, accent,
+                new Vector3(0.205f, 0.78f, 0.02f), Vector3.zero, new Vector3(0.012f, 0.12f, 0.17f), shadows: false);
+            Shapes.Part("Bolso da bermuda", body, PrimitiveType.Cube, wornDenim,
+                new Vector3(0.13f, 0.84f, 0.126f), Vector3.zero, new Vector3(0.11f, 0.09f, 0.015f), shadows: false);
 
-            // A compact backpack replaces the cape and stays on its original animation pivot.
+            // Keep the backpack on the original Cape pivot because KnightView animates it.
             rig.Cape = Pivot("Mochila", body, new Vector3(0f, 1.18f, -0.22f));
-            Shapes.Part("Mochila", rig.Cape, PrimitiveType.Cube, art.WoodDark,
-                new Vector3(0f, -0.07f, -0.07f), Vector3.zero, new Vector3(0.42f, 0.48f, 0.22f));
-            Shapes.Part("Alça traseira esquerda", rig.Cape, PrimitiveType.Cube, shoes,
-                new Vector3(-0.16f, -0.07f, -0.186f), Vector3.zero, new Vector3(0.04f, 0.39f, 0.025f), shadows: false);
-            Shapes.Part("Alça traseira direita", rig.Cape, PrimitiveType.Cube, shoes,
-                new Vector3(0.16f, -0.07f, -0.186f), Vector3.zero, new Vector3(0.04f, 0.39f, 0.025f), shadows: false);
-            Shapes.Part("Tampa da mochila", rig.Cape, PrimitiveType.Cube, shoes,
-                new Vector3(0f, 0.105f, -0.19f), Vector3.zero, new Vector3(0.3f, 0.13f, 0.026f));
-            Shapes.Part("Emblema Z", rig.Cape, PrimitiveType.Cube, art.Iron,
-                new Vector3(0f, -0.005f, -0.2f), Vector3.zero, new Vector3(0.16f, 0.024f, 0.018f), shadows: false);
-            Shapes.Part("Emblema Z", rig.Cape, PrimitiveType.Cube, art.Iron,
-                new Vector3(0f, -0.07f, -0.202f), new Vector3(0f, 0f, -35f), new Vector3(0.18f, 0.024f, 0.018f), shadows: false);
-            Shapes.Part("Emblema Z", rig.Cape, PrimitiveType.Cube, art.Iron,
-                new Vector3(0f, -0.135f, -0.2f), Vector3.zero, new Vector3(0.16f, 0.024f, 0.018f), shadows: false);
-            Shapes.Part("Bolso lateral esquerdo", rig.Cape, PrimitiveType.Cube, art.WoodDark,
-                new Vector3(-0.205f, -0.16f, -0.05f), Vector3.zero, new Vector3(0.06f, 0.17f, 0.15f));
-            Shapes.Part("Bolso lateral direito", rig.Cape, PrimitiveType.Cube, art.WoodDark,
-                new Vector3(0.205f, -0.16f, -0.05f), Vector3.zero, new Vector3(0.06f, 0.17f, 0.15f));
-            Shapes.Part("Alça esquerda", body, PrimitiveType.Cube, shoes,
-                new Vector3(-0.205f, 1.22f, 0.16f), new Vector3(0f, 0f, -12f), new Vector3(0.045f, 0.36f, 0.025f));
-            Shapes.Part("Alça direita", body, PrimitiveType.Cube, shoes,
-                new Vector3(0.205f, 1.22f, 0.16f), new Vector3(0f, 0f, 12f), new Vector3(0.045f, 0.36f, 0.025f));
+            Shapes.Part("Mochila rosa", rig.Cape, PrimitiveType.Capsule, kittyPink,
+                new Vector3(0f, -0.055f, -0.07f), Vector3.zero, new Vector3(0.27f, 0.34f, 0.13f));
+            Shapes.Part("Bolso frontal", rig.Cape, PrimitiveType.Sphere, kittyPink,
+                new Vector3(0f, -0.2f, -0.174f), Vector3.zero, new Vector3(0.2f, 0.13f, 0.035f));
+            // The small white cat face points toward the following camera (-Z).
+            Shapes.Part("Rosto da gatinha", rig.Cape, PrimitiveType.Sphere, kittyWhite,
+                new Vector3(0f, -0.04f, -0.191f), Vector3.zero, new Vector3(0.17f, 0.16f, 0.025f), shadows: false);
+            foreach (float side in new[] { -1f, 1f })
+            {
+                Shapes.Part("Orelha da gatinha", rig.Cape, PrimitiveType.Sphere, kittyWhite,
+                    new Vector3(side * 0.105f, 0.075f, -0.18f), new Vector3(0f, 0f, side * -28f),
+                    new Vector3(0.085f, 0.12f, 0.035f), shadows: false);
+                Shapes.Part("Olho da gatinha", rig.Cape, PrimitiveType.Sphere, kittyInk,
+                    new Vector3(side * 0.055f, -0.035f, -0.219f), Vector3.zero,
+                    new Vector3(0.018f, 0.025f, 0.012f), shadows: false);
+                Shapes.Part("Bigode da gatinha", rig.Cape, PrimitiveType.Cube, kittyInk,
+                    new Vector3(side * 0.105f, -0.07f, -0.217f), new Vector3(0f, 0f, side * 8f),
+                    new Vector3(0.06f, 0.008f, 0.008f), shadows: false);
+                Shapes.Part("Bigode da gatinha", rig.Cape, PrimitiveType.Cube, kittyInk,
+                    new Vector3(side * 0.105f, -0.095f, -0.217f), new Vector3(0f, 0f, side * -8f),
+                    new Vector3(0.06f, 0.008f, 0.008f), shadows: false);
+            }
+            Shapes.Part("Nariz da gatinha", rig.Cape, PrimitiveType.Sphere, kittyNose,
+                new Vector3(0f, -0.063f, -0.222f), Vector3.zero, new Vector3(0.025f, 0.017f, 0.012f), shadows: false);
+            Shapes.Part("Laço da gatinha", rig.Cape, PrimitiveType.Sphere, kittyPink,
+                new Vector3(0.145f, 0.075f, -0.204f), new Vector3(0f, 0f, -20f), new Vector3(0.075f, 0.045f, 0.025f), shadows: false);
+            Shapes.Part("Nó do laço", rig.Cape, PrimitiveType.Sphere, kittyNose,
+                new Vector3(0.145f, 0.075f, -0.226f), Vector3.zero, new Vector3(0.025f, 0.025f, 0.015f), shadows: false);
+            Shapes.Part("Alça traseira esquerda", rig.Cape, PrimitiveType.Capsule, kittyPink,
+                new Vector3(-0.13f, -0.045f, 0.015f), new Vector3(0f, 0f, -8f), new Vector3(0.035f, 0.2f, 0.035f), shadows: false);
+            Shapes.Part("Alça traseira direita", rig.Cape, PrimitiveType.Capsule, kittyPink,
+                new Vector3(0.13f, -0.045f, 0.015f), new Vector3(0f, 0f, 8f), new Vector3(0.035f, 0.2f, 0.035f), shadows: false);
 
-            // Friendly face, swept hair and ears; details face down the original forward axis (+Z).
+            // Face, ears and deliberately untidy layered hair; forward remains +Z.
             Shapes.Part("Cabeça", body, PrimitiveType.Sphere, skin,
                 new Vector3(0f, 1.64f, 0.02f), Vector3.zero, new Vector3(0.32f, 0.35f, 0.31f));
             Shapes.Part("Cabelo", body, PrimitiveType.Sphere, hair,
                 new Vector3(0f, 1.81f, -0.015f), Vector3.zero, new Vector3(0.335f, 0.18f, 0.33f));
+            Shapes.Part("Mecha bagunçada", body, PrimitiveType.Capsule, hair,
+                new Vector3(-0.11f, 1.91f, 0.03f), new Vector3(0f, 0f, -32f), new Vector3(0.13f, 0.11f, 0.13f));
+            Shapes.Part("Mecha bagunçada", body, PrimitiveType.Capsule, hair,
+                new Vector3(0.08f, 1.92f, -0.06f), new Vector3(0f, 0f, 24f), new Vector3(0.12f, 0.1f, 0.12f));
             Shapes.Part("Franja", body, PrimitiveType.Sphere, hair,
                 new Vector3(0.025f, 1.82f, 0.22f), new Vector3(0f, 0f, -12f), new Vector3(0.22f, 0.105f, 0.13f));
             foreach (float side in new[] { -1f, 1f })
             {
                 Shapes.Part("Orelha", body, PrimitiveType.Sphere, skin,
                     new Vector3(side * 0.305f, 1.64f, 0.025f), Vector3.zero, new Vector3(0.09f, 0.12f, 0.075f));
-                Shapes.Part("Costeleta", body, PrimitiveType.Cube, hair,
-                    new Vector3(side * 0.265f, 1.68f, 0.06f), Vector3.zero, new Vector3(0.075f, 0.18f, 0.16f));
+                Shapes.Part("Costeleta", body, PrimitiveType.Capsule, hair,
+                    new Vector3(side * 0.265f, 1.68f, 0.06f), new Vector3(0f, 0f, side * 10f), new Vector3(0.06f, 0.13f, 0.07f));
                 Shapes.Part("Sobrancelha", body, PrimitiveType.Cube, hair,
                     new Vector3(side * 0.085f, 1.735f, 0.305f), new Vector3(0f, 0f, side * 7f), new Vector3(0.085f, 0.025f, 0.02f));
                 Shapes.Part("Olho", body, PrimitiveType.Sphere, detail,
@@ -161,7 +191,7 @@ namespace GauntletRun.Game
             Shapes.Part("Sorriso", body, PrimitiveType.Cube, hair,
                 new Vector3(0f, 1.525f, 0.305f), Vector3.zero, new Vector3(0.105f, 0.018f, 0.018f), shadows: false);
 
-            // The view still animates these exact shoulder pivots and expects a backpack pivot in rig.Cape.
+            // Shirt sleeves and skin-toned forearms stay attached to the original pivots.
             rig.LeftArm = Pivot("Left arm", body, new Vector3(-0.34f, 1.3f, 0f));
             rig.RightArm = Pivot("Right arm", body, new Vector3(0.34f, 1.3f, 0f));
             foreach (Transform arm in new[] { rig.LeftArm, rig.RightArm })
@@ -174,53 +204,19 @@ namespace GauntletRun.Game
                     new Vector3(0f, -0.51f, 0.025f), Vector3.zero, new Vector3(0.13f, 0.14f, 0.13f));
             }
 
-            var pantsParts = new System.Collections.Generic.List<Renderer>();
-            var shoeParts = new System.Collections.Generic.List<Renderer>();
+            var shortsParts = new System.Collections.Generic.List<Renderer>();
+            var accentParts = new System.Collections.Generic.List<Renderer>();
             var shirtParts = new System.Collections.Generic.List<Renderer>();
             foreach (Renderer renderer in rig.Root.GetComponentsInChildren<Renderer>())
             {
-                if (renderer.sharedMaterial == pants) pantsParts.Add(renderer);
-                else if (renderer.sharedMaterial == shoes) shoeParts.Add(renderer);
+                if (renderer.sharedMaterial == shorts) shortsParts.Add(renderer);
+                else if (renderer.sharedMaterial == accent) accentParts.Add(renderer);
                 else if (renderer.sharedMaterial == shirt) shirtParts.Add(renderer);
             }
-            rig.Armour = pantsParts.ToArray();
-            rig.Trim = shoeParts.ToArray();
+            rig.Armour = shortsParts.ToArray();
+            rig.Trim = accentParts.ToArray();
             rig.Cloth = shirtParts.ToArray();
             return rig;
-        }
-
-        /// <summary>Applies a skin's clothing colours (one material per colour, shared by its parts).</summary>
-        public static void Paint(KnightRig rig, Skin skin)
-        {
-            Apply(rig.Armour, Shapes.Recolored(art.Armour, Shapes.Hex(skin.Armour)));
-            Apply(rig.Trim, Shapes.Recolored(art.Trim, Shapes.Hex(skin.Trim)));
-            Apply(rig.Cloth, Shapes.Recolored(art.Cloth, Shapes.Hex(skin.Cape)));
-        }
-
-        static void Apply(Renderer[] renderers, Material material)
-        {
-            foreach (Renderer renderer in renderers) renderer.sharedMaterial = material;
-        }
-
-        static readonly System.Collections.Generic.Dictionary<Color, Material> glows = new System.Collections.Generic.Dictionary<Color, Material>();
-
-        /// <summary>A shared additive glow material per colour.</summary>
-        public static Material Glow(Color color)
-        {
-            if (!glows.TryGetValue(color, out Material material) || material == null)
-            {
-                material = Shapes.Tinted(color);
-                glows[color] = material;
-            }
-            return material;
-        }
-
-        static Transform Pivot(string name, Transform parent, Vector3 position)
-        {
-            var pivot = new GameObject(name).transform;
-            pivot.SetParent(parent, false);
-            pivot.localPosition = position;
-            return pivot;
         }
 
         // ---- Obstacles ----
